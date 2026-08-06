@@ -1,0 +1,116 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 0.35rem;
+}
+
+.actions :global(.btn svg) {
+  flex: 0 0 auto;
+}
+
+.list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0.25rem 0 0.75rem;
+  list-style: none;
+  overflow: visible;
+}
+
+.list > li {
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  border-top: 1px solid oklch(0.3 0.03 55 / 0.07);
+}
+
+.list > li:first-child {
+  border-top: 0;
+  padding-block-start: 0.25rem;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(9rem, 15rem) minmax(0, 1fr);
+  gap: 1.5rem 1.85rem;
+  align-items: center;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: var(--preview-ratio);
+  overflow: hidden;
+  border-radius: var(--radius-inner);
+  background: var(--preview-frame-bg);
+  outline: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.media :global(.preview-frame),
+.media :global(.preview-frame-fallback) {
+  position: absolute;
+  inset: 0;
+}
+
+.body {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.body h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+  font-weight: 400;
+  line-height: var(--leading-display);
+}
+
+.body p {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  line-height: var(--leading-body);
+  text-wrap: pretty;
+}
+
+.archive {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid oklch(0.3 0.03 55 / 0.07);
+}
+
+.archiveList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.archiveList a {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.archiveList a:hover {
+  color: var(--accent-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+@media (max-width: 40rem) {
+  .card {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

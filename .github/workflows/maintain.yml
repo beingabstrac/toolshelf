@@ -1,0 +1,80 @@
+name: Maintain shelf
+
+# Preview refresh + visit-link health. Runs on schedule and on demand.
+# Does not block ingest (separate concurrency group).
+on:
+  schedule:
+    # Reenrich weak/missing OG previews twice daily
+    - cron: "25 3,15 * * *"
+    # Soft URL health checks once daily
+    - cron: "40 4 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "What to run"
+        required: true
+        default: "reenrich"
+        type: choice
+        options:
+          - reenrich
+          - check-urls
+          - both
+
+concurrency:
+  group: toolshelf-maintain
+  cancel-in-progress: true
+
+jobs:
+  maintain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+
+      - name: Resolve mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ github.event.inputs.mode }}"
+          elif [ "${{ github.event.schedule }}" = "40 4 * * *" ]; then
+            MODE="check-urls"
+          else
+            MODE="reenrich"
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+
+      - name: Maintain
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          MODE="${{ steps.mode.outputs.mode }}"
+
+          if [ -z "${DATABASE_URL:-}" ]; then
+            echo "DATABASE_URL secret is missing"
+            exit 1
+          fi
+
+          case "$MODE" in
+            reenrich)
+              npm run ingest:reenrich -- 40
+              npm run ingest:preview-health
+              ;;
+            check-urls)
+              npm run ingest:check-urls -- 40
+              ;;
+            both)
+              npm run ingest:reenrich -- 40
+              npm run ingest:check-urls -- 40
+              npm run ingest:preview-health
+              ;;
+            *)
+              echo "Unknown mode: $MODE"
+              exit 1
+              ;;
+          esac

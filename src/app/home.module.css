@@ -1,0 +1,118 @@
+.hero {
+  display: grid;
+  gap: clamp(2rem, 4.5vw, 3.5rem);
+  margin-block: clamp(0.5rem, 2vw, 1.5rem) clamp(3.25rem, 7vw, 5.5rem);
+}
+
+.heroTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 0.5fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  align-items: end;
+}
+
+.masthead {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.masthead h1 {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 9.2vw + 0.35rem, 9rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: var(--leading-display-solo);
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  text-wrap: nowrap;
+}
+
+.heroNote {
+  display: grid;
+  gap: 1.35rem;
+  padding-block-end: 0.65rem;
+  min-width: 0;
+}
+
+.heroNote > p {
+  max-width: 26rem;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(1.05rem, 1.8vw, 1.28rem);
+  line-height: var(--leading-body);
+  text-wrap: pretty;
+}
+
+.heroCta {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent-deep);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.heroCta:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.heroCta svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  transition: transform 140ms var(--ease-out);
+}
+
+.heroCta:hover svg {
+  transform: translateY(2px);
+}
+
+@media (max-width: 52rem) {
+  .heroTop {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .heroNote {
+    max-width: 36rem;
+    padding-block-end: 0;
+  }
+}
+
+@media (max-width: 40rem) {
+  .hero {
+    margin-block: 0.25rem clamp(2.75rem, 8vw, 4rem);
+    gap: 1.65rem;
+  }
+
+  .masthead h1 {
+    font-size: clamp(2.45rem, 12.5vw, 3.6rem);
+  }
+
+  .heroNote > p {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 22.5rem) {
+  .masthead h1 {
+    font-size: clamp(2.2rem, 11.5vw, 2.75rem);
+    letter-spacing: -0.035em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroCta:hover svg {
+    transform: none;
+  }
+}

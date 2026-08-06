@@ -1,0 +1,49 @@
+{
+  "name": "toolshelf",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "ingest:poll": "tsx scripts/poll.ts",
+    "ingest:backfill": "tsx scripts/backfill.ts",
+    "ingest:status": "tsx scripts/backfill.ts status",
+    "ingest:drain": "tsx scripts/drain.ts",
+    "ingest:fill": "tsx scripts/fill-all.ts",
+    "ingest:reenrich": "tsx scripts/reenrich-previews.ts",
+    "ingest:preview-health": "tsx scripts/preview-health.ts",
+    "ingest:repair-urls": "tsx scripts/repair-product-urls.ts",
+    "ingest:check-urls": "tsx scripts/check-urls.ts",
+    "db:migrate:sources": "tsx scripts/migrate-multisource.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^4.0.36",
+    "@neondatabase/serverless": "^1.1.0",
+    "ai": "^7.0.55",
+    "cheerio": "^1.2.0",
+    "drizzle-orm": "^0.45.2",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/cheerio": "^0.22.35",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.8",
+    "typescript": "^5"
+  }
+}

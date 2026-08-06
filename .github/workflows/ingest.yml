@@ -1,0 +1,105 @@
+name: Ingest
+
+# Runs on every push to main (no waiting for cron), on a tight schedule,
+# and via manual dispatch. New runs cancel in-progress ones so they never queue.
+on:
+  push:
+    branches: [main, master]
+  schedule:
+    # Poll boards + drain Gemini every 20 minutes
+    - cron: "*/20 * * * *"
+    # Deeper multi-source pull a few times a day
+    - cron: "10 1,7,13,19 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "What to run"
+        required: true
+        default: "poll-drain"
+        type: choice
+        options:
+          - poll-drain
+          - poll
+          - drain
+          - fill
+          - show_hn
+          - stories
+          - producthunt
+          - lobsters
+          - uneed
+          - devhunt
+          - status
+
+concurrency:
+  group: toolshelf-ingest
+  cancel-in-progress: true
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+
+      - name: Resolve mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ github.event.inputs.mode }}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            MODE="poll-drain"
+          elif [ "${{ github.event.schedule }}" = "10 1,7,13,19 * * *" ]; then
+            MODE="fill"
+          else
+            MODE="poll-drain"
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Running mode=$MODE"
+
+      - name: Ingest
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          GOOGLE_GENERATIVE_AI_API_KEYS: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEYS }}
+          PRODUCTHUNT_TOKEN: ${{ secrets.PRODUCTHUNT_TOKEN }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          set -euo pipefail
+          MODE="${{ steps.mode.outputs.mode }}"
+
+          if [ -z "${DATABASE_URL:-}" ]; then
+            echo "DATABASE_URL secret is missing"
+            exit 1
+          fi
+
+          case "$MODE" in
+            poll)
+              npx tsx scripts/poll.ts
+              ;;
+            drain)
+              npm run ingest:drain -- 40
+              ;;
+            poll-drain)
+              npx tsx scripts/poll.ts
+              npm run ingest:drain -- 30
+              ;;
+            fill)
+              npm run ingest:fill
+              ;;
+            status)
+              npm run ingest:status
+              ;;
+            show_hn|stories|producthunt|lobsters|uneed|devhunt)
+              npx tsx scripts/backfill.ts "$MODE" 120
+              npm run ingest:drain -- 20
+              ;;
+            *)
+              echo "Unknown mode: $MODE"
+              exit 1
+              ;;
+          esac
