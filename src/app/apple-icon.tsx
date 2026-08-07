@@ -20,9 +20,9 @@ export default async function AppleIcon() {
           background: OG_COLORS.paper,
           color: OG_COLORS.ink,
           fontFamily: "Boldonse",
-          fontSize: 136,
+          fontSize: 84,
           fontWeight: 400,
-          lineHeight: 1,
+          paddingTop: "6px",
         }}
       >
         T

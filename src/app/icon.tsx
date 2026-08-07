@@ -20,9 +20,9 @@ export default async function Icon() {
           background: OG_COLORS.paper,
           color: OG_COLORS.ink,
           fontFamily: "Boldonse",
-          fontSize: 24,
+          fontSize: 15,
           fontWeight: 400,
-          lineHeight: 1,
+          paddingTop: "1px",
         }}
       >
         T
