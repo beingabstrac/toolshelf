@@ -1,6 +1,5 @@
 import { COLLECTIONS } from "@/lib/collections";
 import {
-  DISCOVERY_REVALIDATE_SECONDS,
   boardLabelList,
   discoveryHeaders,
   llmsLinkLine,

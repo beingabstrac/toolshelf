@@ -311,9 +311,11 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
     return items;
   }, [items]);
 
-  useEffect(() => {
+  const [prevQ, setPrevQ] = useState(q);
+  if (q !== prevQ) {
+    setPrevQ(q);
     setActive(0);
-  }, [q]);
+  }
 
   useEffect(() => {
     if (!open) return;

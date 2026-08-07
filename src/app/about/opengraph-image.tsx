@@ -1,4 +1,4 @@
-import { OG_SIZE, renderOgCard } from "@/lib/og-card";
+import { renderOgCard } from "@/lib/og-card";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/seo";
 
 export const runtime = "nodejs";

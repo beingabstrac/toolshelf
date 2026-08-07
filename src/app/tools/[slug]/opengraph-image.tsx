@@ -1,5 +1,5 @@
 import { getToolBySlug } from "@/lib/db/queries";
-import { OG_SIZE, renderOgCard } from "@/lib/og-card";
+import { renderOgCard } from "@/lib/og-card";
 import { SITE_NAME } from "@/lib/seo";
 import { CATEGORY_LABELS } from "@/lib/utils";
 

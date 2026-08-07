@@ -1,5 +1,4 @@
 import {
-  DISCOVERY_REVALIDATE_SECONDS,
   discoveryHeaders,
   llmsLinkLine,
   siteIdentityBlock,

@@ -55,13 +55,27 @@ export function Directory({
   const urlSyncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const [prevUrlParams, setPrevUrlParams] = useState({
+    urlCategory,
+    urlSource,
+    urlSort,
+    urlQ,
+    urlHideBroken,
+  });
+  if (
+    prevUrlParams.urlCategory !== urlCategory ||
+    prevUrlParams.urlSource !== urlSource ||
+    prevUrlParams.urlSort !== urlSort ||
+    prevUrlParams.urlQ !== urlQ ||
+    prevUrlParams.urlHideBroken !== urlHideBroken
+  ) {
+    setPrevUrlParams({ urlCategory, urlSource, urlSort, urlQ, urlHideBroken });
     setCategory(urlCategory);
     setSource(urlSource);
     setSort(urlSort);
     setQ(urlQ);
     setHideBroken(urlHideBroken);
-  }, [urlCategory, urlSource, urlSort, urlQ, urlHideBroken]);
+  }
 
   function syncUrl(next: {
     q?: string;
@@ -134,9 +148,12 @@ export function Directory({
     return next;
   }, [tools, q, category, source, sort, hideBroken]);
 
-  useEffect(() => {
+  const filterKey = `${q}:${category}:${source}:${sort}:${hideBroken}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (prevFilterKey !== filterKey) {
+    setPrevFilterKey(filterKey);
     setVisibleCount(PAGE_SIZE);
-  }, [q, category, source, sort, hideBroken]);
+  }
 
   useEffect(() => {
     const current = parseQuery(searchParams.get("q"));

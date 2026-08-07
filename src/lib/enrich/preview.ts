@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import { hostnameFromUrl } from "@/lib/utils";
-import { isOgPreview, preferScenePreview } from "./media";
+import { preferScenePreview } from "./media";
 
 export type Enrichment = {
   logoUrl: string;

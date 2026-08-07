@@ -32,10 +32,12 @@ export function PreviewFrame({
   const [loaded, setLoaded] = useState(false);
   const showImage = Boolean(src?.trim()) && !failed;
 
-  useEffect(() => {
+  const [prevSrc, setPrevSrc] = useState(src);
+  if (prevSrc !== src) {
+    setPrevSrc(src);
     setFailed(false);
     setLoaded(false);
-  }, [src]);
+  }
 
   useEffect(() => {
     const img = imgRef.current;

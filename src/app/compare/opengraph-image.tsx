@@ -1,5 +1,4 @@
 import { renderCompareOg } from "@/lib/og-compare";
-import { OG_SIZE } from "@/lib/og-style";
 import { SITE_NAME } from "@/lib/seo";
 
 export const runtime = "nodejs";

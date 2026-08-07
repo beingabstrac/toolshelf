@@ -1,5 +1,5 @@
 import { COLLECTIONS, getCollection } from "@/lib/collections";
-import { OG_SIZE, renderOgCard } from "@/lib/og-card";
+import { renderOgCard } from "@/lib/og-card";
 import { SITE_NAME } from "@/lib/seo";
 
 export const runtime = "nodejs";
