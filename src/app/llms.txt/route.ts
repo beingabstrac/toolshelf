@@ -8,7 +8,7 @@ import {
 import { getFeaturedToolsForDiscovery } from "@/lib/discovery-data";
 import { absoluteUrl, getSiteUrl } from "@/lib/seo";
 
-export const revalidate = DISCOVERY_REVALIDATE_SECONDS;
+export const revalidate = 3600;
 
 /**
  * Curated agent index at /llms.txt (llmstxt.org).

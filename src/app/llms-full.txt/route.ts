@@ -15,7 +15,7 @@ import {
 import { isoWeekId } from "@/lib/drop";
 import { absoluteUrl, getSiteUrl, SITE_NAME } from "@/lib/seo";
 
-export const revalidate = DISCOVERY_REVALIDATE_SECONDS;
+export const revalidate = 3600;
 
 /**
  * Expanded agent context companion to /llms.txt.
