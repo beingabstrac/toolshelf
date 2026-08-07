@@ -1,3 +1,5 @@
+import posthog from "posthog-js";
+
 /** Inject third-party analytics scripts from public env vars. Safe to call once. */
 
 export function bootAnalyticsScripts() {
@@ -39,16 +41,31 @@ export function bootAnalyticsScripts() {
     document.head.appendChild(s);
   }
 
-  const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY?.trim();
-  if (posthogKey && !document.getElementById("toolshelf-posthog-init")) {
-    const host =
-      process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim() || "https://us.i.posthog.com";
-    const init = document.createElement("script");
-    init.id = "toolshelf-posthog-init";
-    init.text = `
-!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-posthog.init(${JSON.stringify(posthogKey)},{api_host:${JSON.stringify(host)},capture_pageview:false,persistence:"localStorage+cookie"});
-`;
-    document.head.appendChild(init);
+  const posthogProjectToken =
+    process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim();
+  const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim();
+
+  if (!posthogProjectToken || !posthogHost) {
+    if (process.env.NODE_ENV === "development") {
+      const missingVariable = !posthogProjectToken
+        ? "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN"
+        : "NEXT_PUBLIC_POSTHOG_HOST";
+      throw new Error(
+        `${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`,
+      );
+    }
+    return;
+  }
+
+  if (!posthog.__loaded) {
+    posthog.init(posthogProjectToken, {
+      api_host: posthogHost,
+      capture_pageview: false,
+      capture_exceptions: {
+        capture_unhandled_errors: true,
+        capture_unhandled_rejections: true,
+        capture_console_errors: false,
+      },
+    });
   }
 }

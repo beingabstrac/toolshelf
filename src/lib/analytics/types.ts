@@ -87,10 +87,6 @@ declare global {
       event: string,
       options?: { props?: Record<string, string | number | boolean> },
     ) => void;
-    posthog?: {
-      capture: (event: string, props?: Record<string, unknown>) => void;
-      __loaded?: boolean;
-    };
     toolshelfAnalytics?: {
       track: (event: string, props?: AnalyticsProps) => void;
       page: (props?: AnalyticsProps) => void;

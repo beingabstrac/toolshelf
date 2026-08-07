@@ -328,9 +328,8 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
   function go(item: CommandHit, method: "click" | "enter") {
     track("palette_select", {
       kind: item.kind,
-      label: item.label,
-      href: item.href,
-      query: q.trim(),
+      selection_id: item.id,
+      query_len: q.trim().length,
       method,
     });
     close("navigate");
@@ -357,7 +356,6 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
     if (!needle) return;
     const t = window.setTimeout(() => {
       track("palette_query", {
-        query: needle,
         query_len: needle.length,
         result_count: items.length,
       });

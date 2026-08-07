@@ -1,3 +1,4 @@
+import posthog from "posthog-js";
 import type { AnalyticsPayload, AnalyticsSink } from "./types";
 
 function flattenProps(payload: AnalyticsPayload): Record<string, unknown> {
@@ -65,10 +66,10 @@ export const plausibleSink: AnalyticsSink = (payload) => {
   window.plausible(payload.event, { props });
 };
 
-/** PostHog when snippet loaded. */
+/** PostHog when initialized. */
 export const posthogSink: AnalyticsSink = (payload) => {
-  if (!window.posthog?.capture) return;
-  window.posthog.capture(payload.event, flattenProps(payload));
+  if (!posthog.__loaded) return;
+  posthog.capture(payload.event, flattenProps(payload));
 };
 
 export const DEFAULT_SINKS: AnalyticsSink[] = [
