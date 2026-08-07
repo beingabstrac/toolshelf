@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Suspense } from "react";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 import { CommandShelfHost } from "@/components/command-shelf-host";
@@ -17,6 +18,8 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#f4f0e6" },
   ],
 };
+
+const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
 
 export default function RootLayout({
   children,
@@ -37,6 +40,23 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Boldonse&family=Figtree:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        {gaId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                window.gtag = gtag;
+                gtag('js', new Date());
+                gtag('config', '${gaId}');
+              `}
+            </Script>
+          </>
+        ) : null}
       </head>
       <body>
         <Suspense fallback={null}>
