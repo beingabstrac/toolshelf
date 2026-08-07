@@ -68,6 +68,10 @@ export const plausibleSink: AnalyticsSink = (payload) => {
 /** PostHog when snippet loaded. */
 export const posthogSink: AnalyticsSink = (payload) => {
   if (!window.posthog?.capture) return;
+  if (payload.event === "page_view") {
+    window.posthog.capture("$pageview", flattenProps(payload));
+    return;
+  }
   window.posthog.capture(payload.event, flattenProps(payload));
 };
 
