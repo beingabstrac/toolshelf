@@ -39,8 +39,9 @@ export const debugSink: AnalyticsSink = (payload) => {
 /** GA4 via gtag when script loaded. */
 export const gtagSink: AnalyticsSink = (payload) => {
   if (typeof window.gtag !== "function") return;
-  if (payload.event === "page_view") {
-    window.gtag("event", "page_view", {
+  const ga = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
+  if (payload.event === "page_view" && ga) {
+    window.gtag("config", ga, {
       page_path: payload.path,
       page_location: payload.url,
       ...payload.props,
