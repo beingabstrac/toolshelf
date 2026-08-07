@@ -8,7 +8,7 @@ let cached: Promise<OgFonts> | null = null;
 export function loadOgFonts(): Promise<OgFonts> {
   if (!cached) {
     cached = Promise.all([
-      fetch("https://fonts.gstatic.com/s/boldonse/v1/ZgNQjPxGPbbJUZemjC38.ttf").then(
+      fetch("https://fonts.gstatic.com/s/boldonse/v1/ZgNQjPxGPbbJUZemjC38hmfmNw.ttf").then(
         (r) => r.arrayBuffer(),
       ),
       fetch(
