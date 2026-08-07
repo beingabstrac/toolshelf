@@ -782,23 +782,55 @@ a.tag:hover {
 
 @media (max-width: 40rem) {
   :root {
-    --header-height: 6.25rem;
+    --header-height: 3.25rem;
   }
 
   .site-chrome-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.65rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-block: 0.45rem;
+  }
+
+  .site-brand {
+    flex-shrink: 0;
+  }
+
+  .site-brand-name {
+    font-size: 1rem;
   }
 
   .site-nav {
-    justify-content: flex-start;
-    margin-inline: -0.35rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.15rem;
+    margin-inline: 0;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .site-nav-link {
-    padding-inline: 0.6rem;
-    font-size: 0.78rem;
+    padding-inline: 0.5rem;
+    padding-block: 0.35rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .command-kbd,
+  .command-footer {
+    display: none;
   }
 }
 
@@ -994,8 +1026,9 @@ a.tag:hover {
   }
 }
 
+#shelf,
 .directory {
-  scroll-margin-top: var(--sticky-top);
+  scroll-margin-top: calc(var(--header-height, 3.5rem) + 1.25rem);
   margin-block-start: 0;
 }
 

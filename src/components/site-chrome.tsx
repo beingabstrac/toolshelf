@@ -8,11 +8,9 @@ import { trackAttrs } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/#shelf", label: "Shelf", match: "/" },
   { href: "/drop", label: "Drop", match: "/drop" },
   { href: "/aisles", label: "Aisles", match: "/aisles" },
   { href: "/saved", label: "Saved", match: "/saved" },
-  { href: "/about", label: "About", match: "/about" },
 ] as const;
 
 export function SiteChrome({ search }: { search?: ReactNode }) {
@@ -80,10 +78,8 @@ export function SiteChrome({ search }: { search?: ReactNode }) {
         <nav className="site-nav" aria-label="Primary">
           {NAV.map((item) => {
             const active =
-              item.match === "/"
-                ? pathname === "/"
-                : pathname === item.match ||
-                  pathname.startsWith(`${item.match}/`);
+              pathname === item.match ||
+              pathname.startsWith(`${item.match}/`);
             return (
               <Link
                 key={item.href}
