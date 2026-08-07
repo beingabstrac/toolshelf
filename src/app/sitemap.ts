@@ -1,12 +1,7 @@
 import type { MetadataRoute } from "next";
-import {
-  DISCOVERY_REVALIDATE_SECONDS,
-  indexableSurfaces,
-} from "@/lib/discovery";
+import { indexableSurfaces } from "@/lib/discovery";
 import { getPublishedToolsForSitemap } from "@/lib/discovery-data";
 import { absoluteUrl, getSiteUrl } from "@/lib/seo";
-
-export const revalidate = DISCOVERY_REVALIDATE_SECONDS;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
