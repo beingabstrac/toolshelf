@@ -8,20 +8,27 @@ let cached: Promise<OgFonts> | null = null;
 export function loadOgFonts(): Promise<OgFonts> {
   if (!cached) {
     cached = Promise.all([
-      fetch("https://fonts.gstatic.com/s/boldonse/v1/ZgNQjPxGPbbJUZemjC38hmfmNw.ttf").then(
-        (r) => r.arrayBuffer(),
-      ),
+      fetch("https://fonts.gstatic.com/s/boldonse/v1/ZgNQjPxGPbbJUZemjC38hmfmNw.ttf", {
+        next: { revalidate: 86400 },
+      }).then((r) => r.arrayBuffer()),
       fetch(
         "https://fonts.gstatic.com/s/figtree/v9/_Xmz-HUzqDCFdgfMsYiV_F7wfS-Bs_d_QF5e.ttf",
+        { next: { revalidate: 86400 } },
       ).then((r) => r.arrayBuffer()),
       fetch(
         "https://fonts.gstatic.com/s/figtree/v9/_Xmz-HUzqDCFdgfMsYiV_F7wfS-Bs_eYR15e.ttf",
+        { next: { revalidate: 86400 } },
       ).then((r) => r.arrayBuffer()),
-    ]).then(([boldonse, figtree, figtreeBold]) => [
-      { name: "Boldonse", data: boldonse, weight: 400 as const, style: "normal" as const },
-      { name: "Figtree", data: figtree, weight: 400 as const, style: "normal" as const },
-      { name: "Figtree", data: figtreeBold, weight: 700 as const, style: "normal" as const },
-    ]);
+    ])
+      .then(([boldonse, figtree, figtreeBold]) => [
+        { name: "Boldonse", data: boldonse, weight: 400 as const, style: "normal" as const },
+        { name: "Figtree", data: figtree, weight: 400 as const, style: "normal" as const },
+        { name: "Figtree", data: figtreeBold, weight: 700 as const, style: "normal" as const },
+      ])
+      .catch((err) => {
+        console.warn("loadOgFonts network warning:", err);
+        return [];
+      });
   }
   return cached;
 }
