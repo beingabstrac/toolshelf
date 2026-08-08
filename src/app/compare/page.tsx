@@ -299,12 +299,18 @@ export default async function ComparePage({
         <>
           <div className={`${styles.grid} home-open`}>
             <Panel tool={left} />
+            <div className={styles.vsBadgeMobile} aria-hidden="true">
+              <span>VS</span>
+            </div>
             <Panel tool={right} />
           </div>
 
           <section className="home-open" aria-label="Side-by-side comparison matrix">
             <p className="section-kicker">Breakdown</p>
             <h2 className="section-title">Side-by-side Specs</h2>
+            <p className={styles.matrixScrollHint} aria-hidden="true">
+              ← Scroll matrix side-by-side →
+            </p>
             <div className={styles.matrixContainer}>
               <table className={styles.matrixTable}>
                 <thead>

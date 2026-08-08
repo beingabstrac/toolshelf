@@ -8,6 +8,33 @@
 @media (max-width: 48rem) {
   .grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.vsBadgeMobile {
+  display: none;
+}
+
+@media (max-width: 48rem) {
+  .vsBadgeMobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-block: -0.35rem;
+    z-index: 2;
+  }
+
+  .vsBadgeMobile span {
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-control);
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px oklch(0 0 0 / 0.08);
   }
 }
 
@@ -15,7 +42,7 @@
   display: grid;
   gap: 1.15rem;
   min-width: 0;
-  padding: 1.35rem;
+  padding: clamp(1rem, 4vw, 1.5rem);
 }
 
 .media {
@@ -30,7 +57,7 @@
 .panel h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.55rem;
+  font-size: clamp(1.4rem, 4vw, 1.75rem);
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: var(--leading-display);
@@ -54,11 +81,29 @@
 
 .facts > div {
   display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
+  grid-template-columns: 7.25rem minmax(0, 1fr);
   gap: 0.75rem;
   align-items: baseline;
   padding-block: 0.45rem;
   border-top: 1px solid var(--line);
+}
+
+@media (max-width: 32rem) {
+  .facts > div {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions > a,
+  .actions > Link {
+    text-align: center;
+    justify-content: center;
+  }
 }
 
 .facts dt {
@@ -221,15 +266,33 @@
 
 .matrixContainer {
   overflow-x: auto;
-  margin-top: 1rem;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 0.75rem;
   border-radius: var(--radius-card);
   border: 1px solid var(--line);
   background: var(--bg-elevated);
   box-shadow: var(--shadow);
 }
 
+.matrixScrollHint {
+  display: none;
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 48rem) {
+  .matrixScrollHint {
+    display: block;
+  }
+}
+
 .matrixTable {
   width: 100%;
+  min-width: 34rem;
   border-collapse: collapse;
   font-size: 0.92rem;
   text-align: left;
@@ -239,6 +302,7 @@
 .matrixTable td {
   padding: 0.85rem 1.15rem;
   border-bottom: 1px solid var(--line);
+  vertical-align: top;
 }
 
 .matrixTable th {
@@ -250,13 +314,20 @@
 }
 
 .matrixTable th:first-child {
-  width: 28%;
+  width: 26%;
+  min-width: 8rem;
   font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.matrixTable th:nth-child(2),
+.matrixTable th:nth-child(3) {
+  width: 37%;
+  min-width: 13rem;
 }
 
 .matrixTable tr:last-child td {
