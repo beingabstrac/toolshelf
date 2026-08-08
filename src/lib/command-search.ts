@@ -20,6 +20,10 @@ export type CommandHit = {
   score: number;
   preview?: string | null;
   accent?: string | null;
+  logoUrl?: string | null;
+  url?: string;
+  source?: string;
+  aisleTools?: Tool[];
 };
 
 function scoreField(hay: string, needle: string): number {

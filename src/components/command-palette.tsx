@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { SOURCES, type Tool } from "@/lib/db/schema";
-import { COLLECTIONS } from "@/lib/collections";
+import { COLLECTIONS, pickCollectionTools } from "@/lib/collections";
 import {
   rankByEngagement,
   scoreText,
@@ -24,6 +24,9 @@ import { cardMediaUrl } from "@/lib/enrich/media";
 import { buildShelfHref } from "@/lib/url-state";
 import { SOURCE_LABELS, cn } from "@/lib/utils";
 import { PreviewFrame } from "./preview-frame";
+import { SourceMark } from "./source-mark";
+import { StackedThumbnails } from "./stacked-thumbnails";
+import { ToolLogo } from "./tool-logo";
 
 const NAV: CommandHit[] = [
   {
@@ -79,9 +82,9 @@ const NAV: CommandHit[] = [
 const FILTERS: CommandHit[] = [
   {
     id: "filter-hide-broken",
-    label: "Hide down links",
+    label: "Hide broken / offline tools",
     href: buildShelfHref({ hideBroken: true }),
-    hint: "Search filter",
+    hint: "Only show tools with active, working websites",
     kind: "filter",
     score: 0,
   },
@@ -92,6 +95,7 @@ const FILTERS: CommandHit[] = [
     hint: "Board search",
     kind: "filter" as const,
     score: 0,
+    source,
   })),
 ];
 
@@ -216,15 +220,22 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
 
   const aisleItems: CommandHit[] = useMemo(
     () =>
-      COLLECTIONS.map((c) => ({
-        id: `aisle-${c.slug}`,
-        label: c.title,
-        href: `/aisles/${c.slug}`,
-        hint: c.blurb,
-        kind: "aisle" as const,
-        score: 0,
-      })),
-    [],
+      COLLECTIONS.map((c) => {
+        const aisleTools = pickCollectionTools(tools, c, 3);
+        const topTool = aisleTools[0];
+        return {
+          id: `aisle-${c.slug}`,
+          label: c.title,
+          href: `/aisles/${c.slug}`,
+          hint: c.blurb,
+          kind: "aisle" as const,
+          score: 0,
+          preview: topTool ? cardMediaUrl(topTool) : null,
+          accent: topTool?.brandColor ?? null,
+          aisleTools,
+        };
+      }),
+    [tools],
   );
 
   const hotTools = useMemo(
@@ -277,6 +288,8 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
         score,
         preview: cardMediaUrl(tool),
         accent: tool.brandColor,
+        logoUrl: tool.logoUrl,
+        url: tool.url,
       });
     }
 
@@ -474,6 +487,7 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
                               className={cn(
                                 "command-item",
                                 isTool && "command-item-tool",
+                                item.kind === "aisle" && "command-item-aisle",
                                 index === active && "command-item-active",
                               )}
                               onMouseEnter={() => setActive(index)}
@@ -491,11 +505,66 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
                                   <PreviewFrame
                                     src={item.preview}
                                     fallback={
-                                      <span className="command-thumb-fallback">
-                                        {item.label.slice(0, 1)}
-                                      </span>
+                                      <ToolLogo
+                                        tool={{
+                                          name: item.label,
+                                          url: item.url || "",
+                                          logoUrl: item.logoUrl,
+                                          brandColor: item.accent,
+                                        }}
+                                        size={24}
+                                      />
                                     }
                                   />
+                                </span>
+                              ) : item.kind === "aisle" ? (
+                                <StackedThumbnails tools={item.aisleTools} />
+                              ) : item.source ? (
+                                <span
+                                  className="command-kind"
+                                  style={{
+                                    background: "var(--bg-elevated)",
+                                    border: "1px solid var(--line)",
+                                  }}
+                                  aria-hidden="true"
+                                >
+                                  <SourceMark source={item.source} />
+                                </span>
+                              ) : item.kind === "nav" ? (
+                                <span
+                                  className="command-kind"
+                                  style={{
+                                    background: "var(--accent-soft)",
+                                    color: "var(--accent-deep)",
+                                    fontFamily: "var(--font-display)",
+                                    fontSize: "0.95rem",
+                                    fontWeight: 400,
+                                  }}
+                                  aria-hidden="true"
+                                >
+                                  T
+                                </span>
+                              ) : item.id === "filter-hide-broken" ? (
+                                <span
+                                  className="command-kind"
+                                  style={{
+                                    background: "var(--accent-soft)",
+                                    color: "var(--accent-deep)",
+                                  }}
+                                  aria-hidden="true"
+                                >
+                                  <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2.2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                                  </svg>
                                 </span>
                               ) : (
                                 <span
@@ -505,13 +574,7 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
                                   )}
                                   aria-hidden="true"
                                 >
-                                  {item.kind === "action"
-                                    ? "→"
-                                    : item.kind === "aisle"
-                                      ? "A"
-                                      : item.kind === "filter"
-                                        ? "F"
-                                        : "·"}
+                                  {item.kind === "action" ? "→" : "F"}
                                 </span>
                               )}
                               <span className="command-item-copy">

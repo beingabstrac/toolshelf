@@ -420,7 +420,8 @@ a {
     transform 140ms var(--ease-out);
 }
 
-.command-item-tool {
+.command-item-tool,
+.command-item-aisle {
   grid-template-columns: 3.1rem minmax(0, 1fr);
   padding-block: 0.45rem;
 }
@@ -1432,6 +1433,13 @@ a.tag:hover {
   min-width: 0;
   flex: 1 1 auto;
   background: var(--bg-elevated);
+}
+
+.tool-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
 }
 
 .tool-card-name {

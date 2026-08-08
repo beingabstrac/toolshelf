@@ -3,6 +3,7 @@ import type { Tool } from "@/lib/db/schema";
 import { trackAttrs } from "@/lib/analytics";
 import { cardMediaUrl } from "@/lib/enrich/media";
 import { PreviewFrame } from "./preview-frame";
+import { ToolLogo } from "./tool-logo";
 import styles from "@/app/tools/[slug]/detail.module.css";
 
 /** Compare entry next to Visit. Pick a peer without scrolling. */
@@ -55,11 +56,7 @@ export function ComparePeers({
                 >
                   <PreviewFrame
                     src={media}
-                    fallback={
-                      <span className={styles.comparePeerFallback}>
-                        {peer.name.slice(0, 1)}
-                      </span>
-                    }
+                    fallback={<ToolLogo tool={peer} size={22} />}
                   />
                 </span>
                 <span className={styles.comparePeerName}>{peer.name}</span>

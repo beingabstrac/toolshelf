@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { PreviewFrame } from "@/components/preview-frame";
 import { ShareButton } from "@/components/share-button";
 import { SourceName } from "@/components/source-mark";
+import { ToolLogo } from "@/components/tool-logo";
 import { getCachedRelatedTools, getCachedToolBySlug } from "@/lib/db/cached";
 import type { Tool } from "@/lib/db/schema";
 import { cardMediaUrl } from "@/lib/enrich/media";
@@ -309,22 +310,32 @@ export default async function ComparePage({
                 <thead>
                   <tr>
                     <th>Feature / Metric</th>
-                    <th>{left.name}</th>
-                    <th>{right.name}</th>
+                    <th>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem" }}>
+                        <ToolLogo tool={left} size={26} />
+                        <span>{left.name}</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem" }}>
+                        <ToolLogo tool={right} size={26} />
+                        <span>{right.name}</span>
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td><strong>Key Features</strong></td>
                     <td>
-                      <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                      <ul className={styles.matrixFeatureList}>
                         {getToolFeatures(left).map((feat, i) => (
                           <li key={i}>{feat}</li>
                         ))}
                       </ul>
                     </td>
                     <td>
-                      <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                      <ul className={styles.matrixFeatureList}>
                         {getToolFeatures(right).map((feat, i) => (
                           <li key={i}>{feat}</li>
                         ))}

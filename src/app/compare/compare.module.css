@@ -262,3 +262,17 @@
 .matrixTable tr:last-child td {
   border-bottom: 0;
 }
+
+.matrixFeatureList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.matrixFeatureList li {
+  position: relative;
+  line-height: 1.45;
+}
