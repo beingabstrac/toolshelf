@@ -126,6 +126,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  border-top: 0 !important;
 }
 
 .principle {
@@ -202,6 +203,10 @@
   align-items: baseline;
   padding-block: 0.55rem;
   border-top: 1px solid var(--line);
+}
+
+.machineList li:first-child {
+  border-top: 0;
 }
 
 .machineList a {
