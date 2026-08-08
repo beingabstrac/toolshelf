@@ -1,19 +1,8 @@
-.comparePage {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-card);
   align-items: start;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
 }
 
 @media (max-width: 48rem) {
@@ -52,17 +41,18 @@
 .panel {
   display: grid;
   gap: 1.15rem;
-  width: 100%;
-  max-width: 100%;
   min-width: 0;
-  box-sizing: border-box;
-  padding: clamp(1rem, 4vw, 1.5rem);
+  padding: 1.35rem;
+}
+
+@media (max-width: 32rem) {
+  .panel {
+    padding: 1rem;
+  }
 }
 
 .media {
   position: relative;
-  width: 100%;
-  max-width: 100%;
   aspect-ratio: var(--preview-ratio);
   overflow: hidden;
   border-radius: var(--radius-inner);
@@ -79,7 +69,6 @@
   line-height: var(--leading-display);
   text-wrap: balance;
   overflow-wrap: break-word;
-  max-width: 100%;
 }
 
 .summary {
@@ -88,7 +77,6 @@
   font-size: 0.95rem;
   line-height: var(--leading-body);
   text-wrap: pretty;
-  max-width: 100%;
   overflow-wrap: break-word;
 }
 
@@ -96,9 +84,6 @@
   display: grid;
   gap: 0.65rem;
   margin: 0;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
 }
 
 .facts > div {
@@ -108,14 +93,11 @@
   align-items: baseline;
   padding-block: 0.45rem;
   border-top: 1px solid var(--line);
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
 }
 
 @media (max-width: 32rem) {
   .facts > div {
-    grid-template-columns: 5rem minmax(0, 1fr);
+    grid-template-columns: 5.25rem minmax(0, 1fr);
     gap: 0.35rem;
   }
 }
@@ -141,8 +123,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-chip);
-  max-width: 100%;
-  min-width: 0;
 }
 
 .actions {
@@ -150,31 +130,6 @@
   flex-wrap: wrap;
   gap: 0.75rem 1rem;
   align-items: center;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.actions > a {
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 32rem) {
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .actions > a {
-    width: 100%;
-    max-width: 100%;
-    text-align: center;
-    justify-content: center;
-  }
 }
 
 .swap {
@@ -182,14 +137,12 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.75rem;
-  max-width: 100%;
 }
 
 .swapChip {
   display: inline-flex;
   align-items: center;
   min-height: 2rem;
-  max-width: 100%;
   padding: 0.25rem 0.7rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-control);
@@ -201,9 +154,6 @@
     border-color 140ms var(--ease-out),
     color 140ms var(--ease-out),
     background-color 140ms var(--ease-out);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .swapChip:hover {
@@ -216,8 +166,6 @@
   display: grid;
   gap: 1rem;
   max-width: 36rem;
-  width: 100%;
-  min-width: 0;
 }
 
 .warn {
@@ -230,9 +178,6 @@
 .picker {
   display: grid;
   gap: var(--space-block);
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
 }
 
 .pickerFixed {
@@ -270,10 +215,6 @@
   margin: 0;
   padding: 0.45rem 0.1rem 0.85rem;
   list-style: none;
-  overflow: visible;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
 }
 
 @media (max-width: 48rem) {
@@ -291,8 +232,6 @@
 .pickerCard {
   display: grid;
   gap: 0.65rem;
-  width: 100%;
-  max-width: 100%;
   min-width: 0;
 }
 
@@ -301,9 +240,6 @@
   font-size: 1.05rem;
   font-weight: 400;
   line-height: var(--leading-display);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .pickerCard > span {
@@ -318,8 +254,6 @@
 
 .pickerMedia {
   position: relative;
-  width: 100%;
-  max-width: 100%;
   aspect-ratio: var(--preview-ratio);
   overflow: hidden;
   border-radius: var(--radius-inner);
@@ -328,9 +262,6 @@
 }
 
 .matrixContainer {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin-top: 0.75rem;
@@ -340,25 +271,8 @@
   box-shadow: var(--shadow);
 }
 
-.matrixScrollHint {
-  display: none;
-  margin: 0.5rem 0 0;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 650;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-@media (max-width: 48rem) {
-  .matrixScrollHint {
-    display: block;
-  }
-}
-
 .matrixTable {
   width: 100%;
-  min-width: 32rem;
   border-collapse: collapse;
   font-size: 0.92rem;
   text-align: left;
@@ -381,19 +295,12 @@
 
 .matrixTable th:first-child {
   width: 26%;
-  min-width: 7.5rem;
   font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
-}
-
-.matrixTable th:nth-child(2),
-.matrixTable th:nth-child(3) {
-  width: 37%;
-  min-width: 12rem;
 }
 
 .matrixTable tr:last-child td {

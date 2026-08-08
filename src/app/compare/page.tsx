@@ -261,7 +261,7 @@ export default async function ComparePage({
   const related = left ? await getCachedRelatedTools(left, 12) : [];
 
   return (
-    <main id="main" className={`page-stack ${styles.comparePage}`}>
+    <main id="main" className="page-stack">
       <header className="page-header">
         {left && !right && related.length > 0 ? (
           <p className="title-count">
@@ -308,9 +308,6 @@ export default async function ComparePage({
           <section className="home-open" aria-label="Side-by-side comparison matrix">
             <p className="section-kicker">Breakdown</p>
             <h2 className="section-title">Side-by-side Specs</h2>
-            <p className={styles.matrixScrollHint} aria-hidden="true">
-              ← Scroll matrix side-by-side →
-            </p>
             <div className={styles.matrixContainer}>
               <table className={styles.matrixTable}>
                 <thead>
