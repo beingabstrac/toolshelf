@@ -180,13 +180,14 @@ export function websiteJsonLd(toolCount?: number) {
 export function itemListJsonLd(
   tools: Array<Pick<Tool, "name" | "slug" | "summary">>,
 ) {
+  const items = tools.slice(0, 100);
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: `${SITE_NAME} directory`,
     description: SITE_DESCRIPTION,
-    numberOfItems: tools.length,
-    itemListElement: tools.slice(0, 48).map((tool, index) => ({
+    numberOfItems: items.length,
+    itemListElement: items.map((tool, index) => ({
       "@type": "ListItem",
       position: index + 1,
       url: absoluteUrl(`/tools/${tool.slug}`),

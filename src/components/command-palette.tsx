@@ -245,12 +245,7 @@ export function CommandPalette({ tools }: { tools: Tool[] }) {
   const items = useMemo(() => {
     const needle = q.trim();
     if (!needle) {
-      return [
-        ...NAV.slice(0, 4),
-        ...aisleItems,
-        ...FILTERS.slice(0, 4),
-        ...hotTools,
-      ];
+      return [...NAV, ...aisleItems, ...FILTERS, ...hotTools];
     }
 
     const lower = needle.toLowerCase();
