@@ -171,7 +171,7 @@ function Panel({ tool }: { tool: Tool }) {
             url_status: tool.urlStatus ?? "unknown",
           })}
         >
-          Visit {formatHostForDisplay(host, 22)}
+          Visit {formatHostForDisplay(host, 16)}
         </a>
         <Link
           className="section-link"
