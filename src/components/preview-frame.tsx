@@ -24,7 +24,7 @@ export function PreviewFrame({
   priority = false,
   fallback,
   onFail,
-  fit = "contain",
+  fit = "cover",
   position = "center",
 }: PreviewFrameProps) {
   const imgRef = useRef<HTMLImageElement>(null);

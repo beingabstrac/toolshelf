@@ -1352,8 +1352,7 @@ a.tag:hover {
   display: block;
   width: 100%;
   height: 100%;
-  /* Contain = never crop OG cards; ratio match fills the frame */
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center;
   background: var(--preview-frame-bg);
 }

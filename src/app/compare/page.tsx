@@ -13,6 +13,7 @@ import {
   CATEGORY_LABELS,
   SOURCE_LABELS,
   formatRelative,
+  formatHostForDisplay,
   getToolFeatures,
   hostnameFromUrl,
   withShelfRef,
@@ -169,7 +170,7 @@ function Panel({ tool }: { tool: Tool }) {
             url_status: tool.urlStatus ?? "unknown",
           })}
         >
-          Visit {host}
+          Visit {formatHostForDisplay(host, 22)}
         </a>
         <Link
           className="section-link"

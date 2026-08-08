@@ -31,6 +31,25 @@ export function hostnameFromUrl(url: string): string {
   }
 }
 
+/** Truncate long hostnames in the middle (e.g. "agentic-rag-financial-parser.onrender.com" -> "agentic...onrender.com") */
+export function formatHostForDisplay(host: string, maxLen = 22): string {
+  if (!host || host.length <= maxLen) return host;
+  const parts = host.split(".");
+  if (parts.length >= 2) {
+    const tld = parts.slice(-2).join(".");
+    const prefix = parts.slice(0, -2).join(".");
+    if (prefix && tld) {
+      const allowedPrefixLen = Math.max(5, maxLen - tld.length - 3);
+      if (prefix.length > allowedPrefixLen) {
+        return `${prefix.slice(0, allowedPrefixLen)}...${tld}`;
+      }
+    }
+  }
+  const front = Math.ceil((maxLen - 3) / 2);
+  const back = Math.floor((maxLen - 3) / 2);
+  return `${host.slice(0, front)}...${host.slice(host.length - back)}`;
+}
+
 /** Outbound Visit links: ?ref=toolshelf (same idea as Product Hunt’s ref=producthunt). */
 export function withShelfRef(url: string, ref = "toolshelf"): string {
   try {

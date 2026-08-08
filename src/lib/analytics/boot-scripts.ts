@@ -40,7 +40,12 @@ export function bootAnalyticsScripts() {
   }
 
   const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY?.trim();
-  if (posthogKey && !document.getElementById("toolshelf-posthog-init")) {
+  if (
+    posthogKey &&
+    !window.posthog?.__SV &&
+    !document.getElementById("toolshelf-posthog-init") &&
+    !document.getElementById("posthog-init")
+  ) {
     const host =
       process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim() || "https://us.i.posthog.com";
     const init = document.createElement("script");

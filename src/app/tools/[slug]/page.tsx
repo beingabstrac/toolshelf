@@ -28,6 +28,7 @@ import { trackAttrs } from "@/lib/analytics";
 import {
   CATEGORY_LABELS,
   formatRelative,
+  formatHostForDisplay,
   hostnameFromUrl,
   withShelfRef,
 } from "@/lib/utils";
@@ -250,7 +251,7 @@ export default async function ToolDetailPage({
                 url_status: tool.urlStatus ?? "unknown",
               })}
             >
-              Visit {host}
+              Visit {formatHostForDisplay(host, 22)}
               <svg viewBox="0 0 20 20" aria-hidden="true">
                 <path d="M6 14 14 6m-6 0h6v6" />
               </svg>
