@@ -261,7 +261,7 @@ export default async function ComparePage({
   const related = left ? await getCachedRelatedTools(left, 12) : [];
 
   return (
-    <main id="main" className="page-stack">
+    <main id="main" className={`page-stack ${styles.comparePage}`}>
       <header className="page-header">
         {left && !right && related.length > 0 ? (
           <p className="title-count">
