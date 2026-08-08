@@ -232,9 +232,9 @@ export function pickRelatedTools(
   limit = 6,
 ): Tool[] {
   const categories = tool.categories ?? [];
-  const sources = tool.sources ?? [];
   const seedTokens = tokensFor(tool);
-  const primary = categories[0];
+  // Ignore ultra-generic categories like 'dev' or 'product' for primary matching if a specific category exists
+  const specificCategory = categories.find((c) => c !== "dev" && c !== "product") ?? categories[0];
 
   return pool
     .filter((row) => row.id !== tool.id)
@@ -242,54 +242,40 @@ export function pickRelatedTools(
       const sharedCategories = candidate.categories.filter((c) =>
         categories.includes(c),
       ).length;
-      const sharedSources = (candidate.sources ?? []).filter((s) =>
-        sources.includes(s),
-      ).length;
-      const primaryMatch =
-        primary && candidate.categories.includes(primary) ? 55 : 0;
-      const multiBoardBonus =
-        sharedSources >= 2 ? 90 : sharedSources === 1 ? 32 : 0;
-      const multiCatBonus = sharedCategories >= 2 ? 70 : 0;
+      const specificMatch =
+        specificCategory && candidate.categories.includes(specificCategory)
+          ? 350
+          : 0;
       const candTokens = tokensFor(candidate);
       let keywordHits = 0;
       for (const t of seedTokens) {
         if (candTokens.has(t)) keywordHits += 1;
       }
-      const keywordBonus = Math.min(keywordHits, 6) * 22;
-      const recentBonus =
-        Date.now() - new Date(candidate.firstSeenAt).getTime() <
-        1000 * 60 * 60 * 24 * 21
-          ? 20
-          : 0;
-      const brokenPenalty = candidate.urlStatus === "broken" ? 180 : 0;
+      const keywordBonus = Math.min(keywordHits, 6) * 60;
+      const brokenPenalty = candidate.urlStatus === "broken" ? 300 : 0;
       const score =
-        sharedCategories * 110 +
-        primaryMatch +
-        multiCatBonus +
-        multiBoardBonus +
+        specificMatch +
+        sharedCategories * 120 +
         keywordBonus +
-        recentBonus +
-        engagementScore(candidate) * 0.35 -
+        engagementScore(candidate) * 0.05 -
         brokenPenalty;
       return {
         candidate,
         score,
+        specificMatch,
         sharedCategories,
-        sharedSources,
         keywordHits,
       };
     })
     .filter(
       (row) =>
-        row.sharedCategories > 0 ||
-        row.sharedSources > 0 ||
-        row.keywordHits >= 2,
+        (row.specificMatch > 0 && row.sharedCategories > 0) ||
+        row.keywordHits >= 1,
     )
     .sort(
       (a, b) =>
         b.score - a.score ||
         b.keywordHits - a.keywordHits ||
-        b.sharedSources - a.sharedSources ||
         b.sharedCategories - a.sharedCategories,
     )
     .slice(0, limit)
