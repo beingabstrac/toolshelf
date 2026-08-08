@@ -289,25 +289,34 @@
 }
 
 .matrixContainer {
-  overflow-x: auto;
+  overflow-x: hidden;
   margin-top: 1rem;
   border-radius: var(--radius-card);
   border: 1px solid var(--line);
   background: var(--bg-elevated);
   box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .matrixTable {
   width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.92rem;
   text-align: left;
+  box-sizing: border-box;
 }
 
 .matrixTable th,
 .matrixTable td {
-  padding: 0.85rem 1.15rem;
+  padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--line);
+  overflow-wrap: break-word;
+  word-break: break-word;
+  vertical-align: top;
 }
 
 .matrixTable th {
@@ -328,8 +337,39 @@
   color: var(--muted);
 }
 
+.matrixTable th:nth-child(2),
+.matrixTable th:nth-child(3) {
+  width: 36%;
+}
+
 .matrixTable tr:last-child td {
   border-bottom: 0;
+}
+
+@media (max-width: 48rem) {
+  .matrixTable {
+    font-size: 0.82rem;
+  }
+
+  .matrixTable th,
+  .matrixTable td {
+    padding: 0.6rem 0.45rem;
+  }
+
+  .matrixTable th {
+    font-size: 0.88rem;
+  }
+
+  .matrixTable th:first-child {
+    width: 26%;
+    font-size: 0.68rem;
+    padding-inline: 0.35rem;
+  }
+
+  .matrixTable th:nth-child(2),
+  .matrixTable th:nth-child(3) {
+    width: 37%;
+  }
 }
 
 .matrixFeatureList {
@@ -339,9 +379,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .matrixFeatureList li {
   position: relative;
-  line-height: 1.45;
+  line-height: 1.4;
 }
