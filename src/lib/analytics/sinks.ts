@@ -74,6 +74,7 @@ export const posthogSink: AnalyticsSink = (payload) => {
       $current_url: payload.url,
       $pathname: payload.path,
       $host: typeof window !== "undefined" ? window.location.host : "",
+      $title: typeof document !== "undefined" ? document.title : "",
       ...flattenProps(payload),
     });
     return;
