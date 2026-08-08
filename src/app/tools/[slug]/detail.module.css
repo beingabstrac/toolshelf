@@ -368,11 +368,11 @@
 
 .comparePeer {
   display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+  grid-template-columns: 3.1rem minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.75rem;
-  min-height: 3rem;
-  padding: 0.35rem 0.55rem 0.35rem 0.35rem;
+  min-height: 2.85rem;
+  padding: 0.35rem 0.65rem 0.35rem 0.35rem;
   border-radius: var(--radius-inner);
   background: oklch(1 0 0 / 0.35);
   transition: background-color 140ms var(--ease-out);
@@ -384,10 +384,11 @@
 
 .comparePeerThumb {
   position: relative;
-  width: 2.75rem;
-  height: 2.75rem;
+  display: block;
+  width: 3.1rem;
+  aspect-ratio: var(--preview-ratio);
   overflow: hidden;
-  border-radius: 0.55rem;
+  border-radius: 0.45rem;
   background: var(--preview-frame-bg);
   outline: 1px solid oklch(0 0 0 / 0.08);
 }
