@@ -3,7 +3,6 @@ import type { Tool } from "@/lib/db/schema";
 import { trackAttrs } from "@/lib/analytics";
 import { cardMediaUrl } from "@/lib/enrich/media";
 import { PreviewFrame } from "./preview-frame";
-import { ToolLogo } from "./tool-logo";
 import styles from "@/app/tools/[slug]/detail.module.css";
 
 /** Compare entry next to Visit. Pick a peer without scrolling. */
@@ -51,12 +50,20 @@ export function ComparePeers({
               >
                 <span
                   className={styles.comparePeerThumb}
-                  style={{ background: accent }}
+                  style={{
+                    background: media
+                      ? accent
+                      : `linear-gradient(135deg, ${accent} 0%, oklch(0.24 0.03 55) 100%)`,
+                  }}
                   aria-hidden="true"
                 >
                   <PreviewFrame
                     src={media}
-                    fallback={<ToolLogo tool={peer} size={22} />}
+                    fallback={
+                      <span className={styles.comparePeerFallback}>
+                        {peer.name.slice(0, 1)}
+                      </span>
+                    }
                   />
                 </span>
                 <span className={styles.comparePeerName}>{peer.name}</span>

@@ -56,8 +56,7 @@
   );
 }
 
-.preview :global(.preview-frame),
-.preview :global(.preview-frame-fallback) {
+.preview :global(.preview-frame) {
   position: relative;
   inset: auto;
   width: 100%;
@@ -69,6 +68,20 @@
   outline: 1px solid oklch(0 0 0 / 0.1);
   box-shadow: 0 18px 40px oklch(0.25 0.03 55 / 0.18);
   background: var(--preview-frame-bg);
+}
+
+.preview :global(.preview-frame-fallback) {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  max-width: 40rem;
+  aspect-ratio: var(--preview-ratio);
+  height: auto;
+  overflow: hidden;
+  border-radius: var(--radius-inner);
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  box-shadow: 0 18px 40px oklch(0.25 0.03 55 / 0.18);
+  background: transparent;
 }
 
 .preview :global(.preview-frame-img) {

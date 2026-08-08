@@ -132,6 +132,8 @@ export default async function ToolDetailPage({
   const previewSrc = cardMediaUrl(tool);
   const boardCount = sources.length;
 
+  const accent = tool.brandColor ?? "oklch(0.42 0.08 145)";
+
   return (
     <main id="main" className={styles.page}>
       <JsonLd data={softwareApplicationJsonLd(tool)} />
@@ -140,7 +142,7 @@ export default async function ToolDetailPage({
         <div
           className={styles.previewRail}
           style={{
-            backgroundColor: tool.brandColor ?? "oklch(0.42 0.08 145)",
+            backgroundColor: accent,
           }}
         >
           <div className={styles.preview}>
@@ -150,7 +152,13 @@ export default async function ToolDetailPage({
               priority
               position="center"
               fallback={
-                <div className={styles.previewFallback} aria-hidden="true">
+                <div
+                  className={styles.previewFallback}
+                  style={{
+                    background: `linear-gradient(150deg, ${accent} 0%, oklch(0.20 0.03 55) 100%)`,
+                  }}
+                  aria-hidden="true"
+                >
                   <span>{tool.name}</span>
                 </div>
               }
