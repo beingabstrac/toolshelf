@@ -44,6 +44,8 @@
   min-width: 0;
   padding: 1.35rem;
   box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--radius-card);
 }
 
 @media (max-width: 36rem) {
@@ -71,6 +73,7 @@
   line-height: var(--leading-display);
   text-wrap: balance;
   overflow-wrap: break-word;
+  min-width: 0;
 }
 
 .summary {
@@ -80,26 +83,29 @@
   line-height: var(--leading-body);
   text-wrap: pretty;
   overflow-wrap: break-word;
+  min-width: 0;
 }
 
 .facts {
   display: grid;
   gap: 0.65rem;
   margin: 0;
+  min-width: 0;
 }
 
 .facts > div {
   display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr);
+  grid-template-columns: 6rem minmax(0, 1fr);
   gap: 0.5rem;
   align-items: baseline;
   padding-block: 0.45rem;
   border-top: 1px solid var(--line);
+  min-width: 0;
 }
 
 @media (max-width: 32rem) {
   .facts > div {
-    grid-template-columns: 5.25rem minmax(0, 1fr);
+    grid-template-columns: 4.75rem minmax(0, 1fr);
     gap: 0.35rem;
   }
 }
@@ -125,6 +131,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-chip);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .actions {
