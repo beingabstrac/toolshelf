@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, gte, ilike, lt, or, sql } from "drizzle-orm";
 import { getDb } from "./index";
-import { candidates, sourceMentions, tools, type Tool } from "./schema";
+import { candidates, sourceMentions, tools, type Tool, type ToolCategory } from "./schema";
 import { SOURCE_LABELS, formatRelative } from "@/lib/utils";
 
 export type ToolSort = "top" | "newest" | "discussed";
@@ -233,50 +233,54 @@ export function pickRelatedTools(
 ): Tool[] {
   const categories = tool.categories ?? [];
   const seedTokens = tokensFor(tool);
-  // Ignore ultra-generic categories like 'dev' or 'product' for primary matching if a specific category exists
-  const specificCategory = categories.find((c) => c !== "dev" && c !== "product") ?? categories[0];
+  // Domain specific categories (ignore generic 'dev' and 'product' unless they are the only categories)
+  const specificCategories = categories.filter(
+    (c) => c !== "dev" && c !== "product",
+  );
+  const targetCategories = specificCategories.length
+    ? specificCategories
+    : categories;
 
   return pool
     .filter((row) => row.id !== tool.id)
     .map((candidate) => {
-      const sharedCategories = candidate.categories.filter((c) =>
-        categories.includes(c),
+      const candCats = candidate.categories ?? [];
+      const sharedSpecific = candCats.filter((c) =>
+        targetCategories.includes(c as ToolCategory),
       ).length;
-      const specificMatch =
-        specificCategory && candidate.categories.includes(specificCategory)
-          ? 350
-          : 0;
+      const sharedAll = candCats.filter((c) => categories.includes(c)).length;
+
       const candTokens = tokensFor(candidate);
       let keywordHits = 0;
       for (const t of seedTokens) {
         if (candTokens.has(t)) keywordHits += 1;
       }
-      const keywordBonus = Math.min(keywordHits, 6) * 60;
+
+      const specificMatchBonus = sharedSpecific > 0 ? 400 : 0;
+      const keywordBonus = Math.min(keywordHits, 6) * 75;
       const brokenPenalty = candidate.urlStatus === "broken" ? 300 : 0;
+
       const score =
-        specificMatch +
-        sharedCategories * 120 +
+        specificMatchBonus +
+        sharedSpecific * 150 +
+        sharedAll * 30 +
         keywordBonus +
         engagementScore(candidate) * 0.05 -
         brokenPenalty;
+
       return {
         candidate,
         score,
-        specificMatch,
-        sharedCategories,
+        sharedSpecific,
         keywordHits,
       };
     })
-    .filter(
-      (row) =>
-        (row.specificMatch > 0 && row.sharedCategories > 0) ||
-        row.keywordHits >= 1,
-    )
+    .filter((row) => row.sharedSpecific > 0 || row.keywordHits >= 1)
     .sort(
       (a, b) =>
         b.score - a.score ||
         b.keywordHits - a.keywordHits ||
-        b.sharedCategories - a.sharedCategories,
+        b.sharedSpecific - a.sharedSpecific,
     )
     .slice(0, limit)
     .map((row) => row.candidate);

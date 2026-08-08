@@ -11,6 +11,7 @@ import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { trackAttrs } from "@/lib/analytics";
 import {
   CATEGORY_LABELS,
+  SOURCE_LABELS,
   formatRelative,
   hostnameFromUrl,
   withShelfRef,
@@ -297,6 +298,71 @@ export default async function ComparePage({
             <Panel tool={left} />
             <Panel tool={right} />
           </div>
+
+          <section className="home-open" aria-label="Side-by-side comparison matrix">
+            <p className="section-kicker">Breakdown</p>
+            <h2 className="section-title">Side-by-side Specs</h2>
+            <div className={styles.matrixContainer}>
+              <table className={styles.matrixTable}>
+                <thead>
+                  <tr>
+                    <th>Feature / Metric</th>
+                    <th>{left.name}</th>
+                    <th>{right.name}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Categories</strong></td>
+                    <td>
+                      {left.categories
+                        .map((c) => CATEGORY_LABELS[c] ?? c)
+                        .join(", ")}
+                    </td>
+                    <td>
+                      {right.categories
+                        .map((c) => CATEGORY_LABELS[c] ?? c)
+                        .join(", ")}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Community Boards</strong></td>
+                    <td>
+                      {left.sources
+                        .map((s) => SOURCE_LABELS[s] ?? s)
+                        .join(", ")}
+                    </td>
+                    <td>
+                      {right.sources
+                        .map((s) => SOURCE_LABELS[s] ?? s)
+                        .join(", ")}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Peak Score</strong></td>
+                    <td>{left.scorePeak.toLocaleString()} pts</td>
+                    <td>{right.scorePeak.toLocaleString()} pts</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Comments & Discussion</strong></td>
+                    <td>{left.commentsPeak.toLocaleString()} comments</td>
+                    <td>{right.commentsPeak.toLocaleString()} comments</td>
+                  </tr>
+                  <tr>
+                    <td><strong>First Discovered</strong></td>
+                    <td>{formatRelative(new Date(left.firstSeenAt))}</td>
+                    <td>{formatRelative(new Date(right.firstSeenAt))}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pricing Model</strong></td>
+                    <td style={{ textTransform: "capitalize" }}>{left.pricing}</td>
+                    <td style={{ textTransform: "capitalize" }}>{right.pricing}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
           {related.length > 1 ? (
             <div className="home-open">
               <p className="section-kicker">Swap the other side</p>
