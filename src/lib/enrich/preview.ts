@@ -7,6 +7,7 @@ export type Enrichment = {
   previewImageUrl: string | null;
   brandColor: string | null;
   previewKind: "og" | null;
+  detectedPricing: "free" | "paid" | "freemium" | null;
 };
 
 export {
@@ -118,6 +119,59 @@ function themeColor($: CheerioRoot, seed: string): string {
   return hashColor(seed);
 }
 
+export function detectPricingFromHtml(
+  $: CheerioRoot,
+  htmlText: string,
+  siteUrl: string,
+): "free" | "paid" | "freemium" | null {
+  const text = htmlText.toLowerCase();
+  const host = hostnameFromUrl(siteUrl).toLowerCase();
+
+  // GitHub / Open source indicator
+  if (
+    host.includes("github.com") ||
+    host.includes("github.io") ||
+    host.includes("gitlab.com") ||
+    /mit license|apache-2\.0|agpl|open source|open-source|public domain/i.test(
+      text,
+    )
+  ) {
+    return "free";
+  }
+
+  // Freemium indicators (has free plan + paid options)
+  const hasFreePlan =
+    /free plan|free tier|free forever|forever free|\$0\/m|\$0\s*\/\s*month|start for free/i.test(
+      text,
+    );
+  const hasPaidPlan =
+    /pro plan|enterprise|premium|pricing|\/month|\/mo|\$\d+/i.test(text);
+
+  if (hasFreePlan && hasPaidPlan) {
+    return "freemium";
+  }
+
+  if (hasFreePlan && !hasPaidPlan) {
+    return "free";
+  }
+
+  // Paid indicators (paid or trial only)
+  if (
+    /free trial|14-day trial|7-day trial|credit card required|billing|per month|\$\d+/i.test(
+      text,
+    )
+  ) {
+    return "paid";
+  }
+
+  // 100% Free indicators
+  if (/100% free|free tool|completely free|free & open|no cost/i.test(text)) {
+    return "free";
+  }
+
+  return null;
+}
+
 export async function enrichToolVisuals(siteUrl: string): Promise<Enrichment> {
   const host = hostnameFromUrl(siteUrl);
   let logoUrl = faviconUrl(siteUrl);
@@ -146,6 +200,7 @@ export async function enrichToolVisuals(siteUrl: string): Promise<Enrichment> {
         previewImageUrl: preferScenePreview(githubOg),
         brandColor: brandFallback,
         previewKind: githubOg ? "og" : null,
+        detectedPricing: host.includes("github.com") ? "free" : null,
       };
     }
 
@@ -155,12 +210,14 @@ export async function enrichToolVisuals(siteUrl: string): Promise<Enrichment> {
     const brandColor = themeColor($, host);
     const base = res.url || siteUrl;
     const og = preferScenePreview(...collectOgImages($, base), githubOg);
+    const detectedPricing = detectPricingFromHtml($, html, siteUrl);
 
     return {
       logoUrl,
       previewImageUrl: og,
       brandColor,
       previewKind: og ? "og" : null,
+      detectedPricing,
     };
   } catch {
     return {
@@ -168,6 +225,7 @@ export async function enrichToolVisuals(siteUrl: string): Promise<Enrichment> {
       previewImageUrl: preferScenePreview(githubOg),
       brandColor: brandFallback,
       previewKind: githubOg ? "og" : null,
+      detectedPricing: host.includes("github.com") ? "free" : null,
     };
   }
 }

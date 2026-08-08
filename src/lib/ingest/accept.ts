@@ -100,6 +100,10 @@ export async function acceptTool(
   } else {
     const visuals = await enrichToolVisuals(url);
     const slug = await ensureUniqueSlug(db, classification.name);
+    const resolvedPricing =
+      visuals.detectedPricing ??
+      (classification.pricing !== "unknown" ? classification.pricing : "unknown");
+
     let inserted: Array<{ id: number }> = [];
     try {
       inserted = await db
@@ -114,7 +118,7 @@ export async function acceptTool(
             classification.name,
           categories: classification.categories,
           sources: [input.source],
-          pricing: classification.pricing,
+          pricing: resolvedPricing,
           logoUrl: visuals.logoUrl,
           previewImageUrl: preferScenePreview(
             input.previewImageUrl,
@@ -143,7 +147,7 @@ export async function acceptTool(
             classification.name,
           categories: classification.categories,
           sources: [input.source],
-          pricing: classification.pricing,
+          pricing: resolvedPricing,
           logoUrl: visuals.logoUrl,
           previewImageUrl: preferScenePreview(
             input.previewImageUrl,
