@@ -674,14 +674,22 @@ a {
 
 .page-stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-section);
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
-
 
 .surface {
   background: var(--bg-elevated);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow);
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .tag {
@@ -1729,6 +1737,10 @@ a.tag:hover {
 .home-open {
   padding-block: clamp(2.5rem, 5.5vw, 4rem);
   border-top: 1px solid oklch(0.3 0.03 55 / 0.07);
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* First block under a page header: keep air, no rule above the first item */
