@@ -35,6 +35,10 @@ type PhNode = {
 type GraphqlResponse = {
   data?: {
     posts?: {
+      pageInfo?: {
+        hasNextPage?: boolean;
+        endCursor?: string | null;
+      };
       edges?: Array<{ node?: PhNode | null } | null> | null;
     } | null;
   };
@@ -42,8 +46,12 @@ type GraphqlResponse = {
 };
 
 const POSTS_QUERY = `
-query ToolshelfPosts($first: Int!) {
-  posts(first: $first, order: NEWEST) {
+query ToolshelfPosts($first: Int!, $after: String) {
+  posts(first: $first, after: $after, order: NEWEST) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     edges {
       node {
         id
@@ -100,39 +108,55 @@ function mapNode(node: PhNode | null | undefined): PhPost | null {
   };
 }
 
-export async function fetchNewestPosts(first = 30): Promise<PhPost[]> {
+export async function fetchNewestPosts(totalWanted = 30): Promise<PhPost[]> {
   const token = process.env.PRODUCTHUNT_TOKEN?.trim();
   if (!token) {
     throw new Error("PRODUCTHUNT_TOKEN is not set");
   }
 
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      query: POSTS_QUERY,
-      variables: { first },
-    }),
-  });
+  const allPosts: PhPost[] = [];
+  let afterCursor: string | null | undefined = undefined;
+  const pageSize = Math.min(totalWanted, 40);
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Product Hunt API ${res.status}: ${text.slice(0, 240)}`);
+  while (allPosts.length < totalWanted) {
+    const fetchCount = Math.min(pageSize, totalWanted - allPosts.length);
+    const res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: POSTS_QUERY,
+        variables: { first: fetchCount, after: afterCursor },
+      }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Product Hunt API ${res.status}: ${text.slice(0, 240)}`);
+    }
+
+    const json = (await res.json()) as GraphqlResponse;
+    if (json.errors?.length) {
+      throw new Error(json.errors.map((e) => e.message).join("; "));
+    }
+
+    const edges = json.data?.posts?.edges ?? [];
+    const posts = edges
+      .map((edge) => mapNode(edge?.node))
+      .filter((p): p is PhPost => Boolean(p));
+
+    if (posts.length === 0) break;
+    allPosts.push(...posts);
+
+    const pageInfo = json.data?.posts?.pageInfo;
+    if (!pageInfo?.hasNextPage || !pageInfo?.endCursor) break;
+    afterCursor = pageInfo.endCursor;
   }
 
-  const json = (await res.json()) as GraphqlResponse;
-  if (json.errors?.length) {
-    throw new Error(json.errors.map((e) => e.message).join("; "));
-  }
-
-  const edges = json.data?.posts?.edges ?? [];
-  return edges
-    .map((edge) => mapNode(edge?.node))
-    .filter((p): p is PhPost => Boolean(p));
+  return allPosts;
 }
 
 /** Prefer the maker website. Never return a bare PH redirect as the product URL. */
