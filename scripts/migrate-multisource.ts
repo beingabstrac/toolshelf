@@ -30,6 +30,7 @@ async function main() {
   await sql`CREATE UNIQUE INDEX IF NOT EXISTS source_mentions_source_external_idx ON hn_mentions (source, hn_object_id)`;
 
   await sql`ALTER TABLE tools ADD COLUMN IF NOT EXISTS sources text[] NOT NULL DEFAULT '{}'`;
+  await sql`ALTER TABLE tools ADD COLUMN IF NOT EXISTS features text[] NOT NULL DEFAULT '{}'`;
   await sql`
     UPDATE tools t
     SET sources = sub.sources
