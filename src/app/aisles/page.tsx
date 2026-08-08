@@ -2,7 +2,7 @@ import Link from "next/link";
 import { trackAttrs } from "@/lib/analytics";
 import type { Metadata } from "next";
 import { PreviewFrame } from "@/components/preview-frame";
-import { COLLECTIONS, pickCollectionTools } from "@/lib/collections";
+import { COLLECTIONS, getMatchingCollectionTools } from "@/lib/collections";
 import { getCachedWideShelf } from "@/lib/db/cached";
 import { cardMediaUrl } from "@/lib/enrich/media";
 import { SITE_NAME, absoluteUrl } from "@/lib/seo";
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default async function AislesIndexPage() {
   const tools = process.env.DATABASE_URL ? await getCachedWideShelf() : [];
   const aisles = COLLECTIONS.map((def) => {
-    const matched = pickCollectionTools(tools, def, 48);
+    const matched = getMatchingCollectionTools(tools, def);
     return {
       def,
       picks: matched.slice(0, 3),

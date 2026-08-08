@@ -146,10 +146,9 @@ export function scoreForCollection(tool: Tool, def: CollectionDef): number {
   );
 }
 
-export function pickCollectionTools(
+export function getMatchingCollectionTools(
   tools: Tool[],
   def: CollectionDef,
-  limit = 24,
 ): Tool[] {
   return tools
     .map((tool) => ({ tool, score: scoreForCollection(tool, def) }))
@@ -159,8 +158,15 @@ export function pickCollectionTools(
         b.score - a.score ||
         engagementScore(b.tool) - engagementScore(a.tool),
     )
-    .slice(0, limit)
     .map((row) => row.tool);
+}
+
+export function pickCollectionTools(
+  tools: Tool[],
+  def: CollectionDef,
+  limit = 24,
+): Tool[] {
+  return getMatchingCollectionTools(tools, def).slice(0, limit);
 }
 
 export function collectionTeasers(
@@ -168,7 +174,7 @@ export function collectionTeasers(
   perAisle = 3,
 ): { def: CollectionDef; tools: Tool[]; count: number }[] {
   return COLLECTIONS.map((def) => {
-    const matched = pickCollectionTools(tools, def, 48);
+    const matched = getMatchingCollectionTools(tools, def);
     return {
       def,
       tools: matched.slice(0, perAisle),

@@ -4,7 +4,7 @@ import { ToolGrid } from "@/components/tool-grid";
 import {
   COLLECTIONS,
   getCollection,
-  pickCollectionTools,
+  getMatchingCollectionTools,
 } from "@/lib/collections";
 import { getCachedWideShelf } from "@/lib/db/cached";
 import { SITE_NAME, absoluteUrl } from "@/lib/seo";
@@ -45,7 +45,7 @@ export default async function AislePage({
   if (!def) notFound();
 
   const shelf = process.env.DATABASE_URL ? await getCachedWideShelf() : [];
-  const tools = pickCollectionTools(shelf, def, 48);
+  const tools = getMatchingCollectionTools(shelf, def);
 
   return (
     <main id="main" className="page-stack">
