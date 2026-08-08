@@ -70,7 +70,12 @@ export const plausibleSink: AnalyticsSink = (payload) => {
 export const posthogSink: AnalyticsSink = (payload) => {
   if (!window.posthog?.capture) return;
   if (payload.event === "page_view") {
-    window.posthog.capture("$pageview", flattenProps(payload));
+    window.posthog.capture("$pageview", {
+      $current_url: payload.url,
+      $pathname: payload.path,
+      $host: typeof window !== "undefined" ? window.location.host : "",
+      ...flattenProps(payload),
+    });
     return;
   }
   window.posthog.capture(payload.event, flattenProps(payload));

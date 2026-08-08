@@ -1163,6 +1163,7 @@ a.tag:hover {
   flex: 0 0 auto;
   display: block;
   border-radius: 0.28rem;
+  object-fit: contain;
 }
 
 .chip .source-name,

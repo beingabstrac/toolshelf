@@ -3,6 +3,38 @@ import { SOURCE_LABELS, cn } from "@/lib/utils";
 
 type SourceKey = Source | string;
 
+const ICON_SIZE = 14;
+
+const svgProps = (className?: string) => ({
+  className: cn("source-mark", className),
+  width: ICON_SIZE,
+  height: ICON_SIZE,
+  viewBox: "0 0 24 24",
+  "aria-hidden": true as const,
+  focusable: false as const,
+});
+
+function BrandImage({
+  src,
+  className,
+}: {
+  src: string;
+  className?: string;
+}) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      width={ICON_SIZE}
+      height={ICON_SIZE}
+      className={cn("source-mark", className)}
+      aria-hidden
+      decoding="async"
+    />
+  );
+}
+
 /** Compact brand marks for launch boards. */
 export function SourceMark({
   source,
@@ -11,94 +43,49 @@ export function SourceMark({
   source: SourceKey;
   className?: string;
 }) {
-  const common = {
-    className: cn("source-mark", className),
-    viewBox: "0 0 16 16",
-    width: 14,
-    height: 14,
-    "aria-hidden": true as const,
-    focusable: false as const,
-  };
-
   switch (source) {
     case "hackernews":
       return (
-        <svg {...common}>
-          <rect width="16" height="16" rx="2.5" fill="#ff6600" />
+        <svg {...svgProps(className)}>
           <path
-            d="M4.2 3.4h2.1l1.7 3.4 1.7-3.4h2.1L8.9 8.2V12.6H7.1V8.2L4.2 3.4z"
-            fill="#fff"
+            fill="#FF6600"
+            d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"
           />
         </svg>
       );
     case "producthunt":
       return (
-        <svg {...common}>
-          <circle cx="8" cy="8" r="8" fill="#da552f" />
+        <svg {...svgProps(className)}>
           <path
-            d="M7 4.4h2.1c1.7 0 2.8 1 2.8 2.5S10.8 9.4 9.1 9.4H7.9V12H6.2V4.4H7zm.9 3.6h1c.7 0 1.2-.4 1.2-1.1S9.6 5.8 8.9 5.8h-1V8z"
-            fill="#fff"
+            fill="#DA552F"
+            d="M13.604 8.4h-3.405V12h3.405c.995 0 1.801-.806 1.801-1.801 0-.993-.805-1.799-1.801-1.799zM12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm1.604 14.4h-3.405V18H7.801V6h5.804c2.319 0 4.2 1.88 4.2 4.199 0 2.321-1.881 4.201-4.201 4.201z"
           />
         </svg>
       );
     case "lobsters":
       return (
-        <svg {...common}>
-          <rect width="16" height="16" rx="3" fill="#ac130d" />
-          <path
-            d="M4.2 10.8c.4-2.2 1.6-3.6 3.5-4.1-.5-.4-.8-1-.8-1.7 0-1.2 1-2.1 2.2-2.1s2.2.9 2.2 2.1c0 .7-.3 1.3-.8 1.7 1.9.5 3.1 1.9 3.5 4.1H4.2zm3.9-6.5c-.4 0-.7.3-.7.7s.3.7.7.7.7-.3.7-.7-.3-.7-.7-.7z"
-            fill="#fff"
-          />
-        </svg>
+        <BrandImage src="/sources/lobsters.png" className={className} />
       );
     case "reddit":
       return (
-        <svg {...common}>
-          <circle cx="8" cy="8" r="8" fill="#ff4500" />
-          <circle cx="5.6" cy="8.2" r="1.15" fill="#fff" />
-          <circle cx="10.4" cy="8.2" r="1.15" fill="#fff" />
+        <svg {...svgProps(className)}>
           <path
-            d="M5.7 10c.7.6 1.5.9 2.3.9s1.6-.3 2.3-.9"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1.1"
-            strokeLinecap="round"
-          />
-          <circle cx="12.2" cy="5.4" r="1" fill="#fff" />
-          <path
-            d="M10.6 4.2c.2 1 .8 1.7 1.6 2"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1"
-            strokeLinecap="round"
+            fill="#FF4500"
+            d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0Zm4.388 3.199c1.104 0 1.999.895 1.999 1.999 0 1.105-.895 2-1.999 2-.946 0-1.739-.657-1.947-1.539v.002c-1.147.162-2.032 1.15-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363.473-.363 1.064-.58 1.707-.58 1.547 0 2.802 1.254 2.802 2.802 0 1.117-.655 2.081-1.601 2.531-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87-.954-.447-1.614-1.415-1.614-2.538 0-1.548 1.255-2.802 2.803-2.802.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01c0-1.663 1.263-3.034 2.88-3.207.188-.911.993-1.595 1.959-1.595Zm-8.085 8.376c-.784 0-1.459.78-1.506 1.797-.047 1.016.64 1.429 1.426 1.429.786 0 1.371-.369 1.418-1.385.047-1.017-.553-1.841-1.338-1.841Zm7.406 0c-.786 0-1.385.824-1.338 1.841.047 1.017.634 1.385 1.418 1.385.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797Zm-3.703 4.013c-.974 0-1.907.048-2.77.135-.147.015-.241.168-.183.305.483 1.154 1.622 1.964 2.953 1.964 1.33 0 2.47-.81 2.953-1.964.057-.137-.037-.29-.184-.305-.863-.087-1.795-.135-2.769-.135Z"
           />
         </svg>
       );
     case "uneed":
-      return (
-        <svg {...common}>
-          <rect width="16" height="16" rx="4" fill="#5b4dff" />
-          <path
-            d="M5 4.2h1.7v4.3c0 1.1.5 1.7 1.4 1.7s1.4-.6 1.4-1.7V4.2H11.2v4.4c0 2.1-1.2 3.3-3.1 3.3S5 10.7 5 8.6V4.2z"
-            fill="#fff"
-          />
-        </svg>
-      );
+      return <BrandImage src="/sources/uneed.png" className={className} />;
     case "devhunt":
       return (
-        <svg {...common}>
-          <rect width="16" height="16" rx="3" fill="#111827" />
-          <path
-            d="M4.2 8 6.8 5.4l1 1-1.6 1.6 1.6 1.6-1 1L4.2 8zm7.6 0L9.2 5.4l-1 1 1.6 1.6-1.6 1.6 1 1L11.8 8z"
-            fill="#22d3ee"
-          />
-        </svg>
+        <BrandImage src="/sources/devhunt.png" className={className} />
       );
     default:
       return (
-        <svg {...common}>
-          <circle cx="8" cy="8" r="8" fill="currentColor" opacity="0.35" />
-          <circle cx="8" cy="8" r="2.2" fill="currentColor" />
+        <svg {...svgProps(className)}>
+          <circle cx="12" cy="12" r="12" fill="currentColor" opacity="0.35" />
+          <circle cx="12" cy="12" r="3.3" fill="currentColor" />
         </svg>
       );
   }
