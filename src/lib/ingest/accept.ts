@@ -100,32 +100,63 @@ export async function acceptTool(
   } else {
     const visuals = await enrichToolVisuals(url);
     const slug = await ensureUniqueSlug(db, classification.name);
-    const inserted = await db
-      .insert(tools)
-      .values({
-        slug,
-        name: classification.name,
-        url,
-        summary:
-          classification.one_line_summary ||
-          input.summaryFallback ||
-          classification.name,
-        categories: classification.categories,
-        sources: [input.source],
-        pricing: classification.pricing,
-        logoUrl: visuals.logoUrl,
-        previewImageUrl: preferScenePreview(
-          input.previewImageUrl,
-          visuals.previewImageUrl,
-        ),
-        brandColor: visuals.brandColor,
-        inclusionReason: reason,
-        firstSeenAt: seenAt,
-        scorePeak: score,
-        commentsPeak: comments,
-        status: "published",
-      })
-      .returning({ id: tools.id });
+    let inserted: Array<{ id: number }> = [];
+    try {
+      inserted = await db
+        .insert(tools)
+        .values({
+          slug,
+          name: classification.name,
+          url,
+          summary:
+            classification.one_line_summary ||
+            input.summaryFallback ||
+            classification.name,
+          categories: classification.categories,
+          sources: [input.source],
+          pricing: classification.pricing,
+          logoUrl: visuals.logoUrl,
+          previewImageUrl: preferScenePreview(
+            input.previewImageUrl,
+            visuals.previewImageUrl,
+          ),
+          brandColor: visuals.brandColor,
+          inclusionReason: reason,
+          firstSeenAt: seenAt,
+          scorePeak: score,
+          commentsPeak: comments,
+          status: "published",
+        })
+        .returning({ id: tools.id });
+    } catch {
+      const altSlug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+      inserted = await db
+        .insert(tools)
+        .values({
+          slug: altSlug,
+          name: classification.name,
+          url,
+          summary:
+            classification.one_line_summary ||
+            input.summaryFallback ||
+            classification.name,
+          categories: classification.categories,
+          sources: [input.source],
+          pricing: classification.pricing,
+          logoUrl: visuals.logoUrl,
+          previewImageUrl: preferScenePreview(
+            input.previewImageUrl,
+            visuals.previewImageUrl,
+          ),
+          brandColor: visuals.brandColor,
+          inclusionReason: reason,
+          firstSeenAt: seenAt,
+          scorePeak: score,
+          commentsPeak: comments,
+          status: "published",
+        })
+        .returning({ id: tools.id });
+    }
     toolId = inserted[0]!.id;
   }
 
