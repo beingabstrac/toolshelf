@@ -10,6 +10,7 @@ const classificationSchema = z.object({
   url: z.string().nullable(),
   one_line_summary: z.string().nullable(),
   categories: z.array(z.enum(TOOL_CATEGORIES)).max(3),
+  features: z.array(z.string()).max(4).default([]),
   pricing: z.enum(["free", "paid", "freemium", "unknown"]),
   confidence: z.number().min(0).max(1),
   reason: z.string(),
@@ -24,7 +25,7 @@ developer tools, design tools, product tools, infra, AI coding tools, no-code bu
 
 NOT a tool: essays, news, research papers, politics, company drama, tutorials without a product, personal blogs, one-off art/toys with no reusable product, job posts, consumer gadgets, physical products, games, lifestyle apps, fashion, food, unless they are clearly builder/product tools.
 
-If it is a tool, extract a clean product name (no "Show HN:" prefix), the best product website URL (not a discussion thread), a one-line summary (max 140 chars), 1-3 categories from the allowed list, pricing guess, and confidence 0-1.`;
+If it is a tool, extract a clean product name (no "Show HN:" prefix), the best product website URL (not a discussion thread), a one-line summary (max 140 chars), 2-4 key features/capabilities, 1-3 categories from the allowed list, pricing guess, and confidence 0-1.`;
 
 export async function classifyLaunch(input: {
   source: Source;

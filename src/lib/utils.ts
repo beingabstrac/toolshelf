@@ -99,6 +99,28 @@ export function cn(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
 }
 
+export function getToolFeatures(tool: {
+  features?: string[] | null;
+  summary?: string;
+  inclusionReason?: string | null;
+  categories?: string[];
+}): string[] {
+  if (tool.features && tool.features.length > 0) {
+    return tool.features;
+  }
+  const items: string[] = [];
+  if (tool.summary?.trim()) {
+    items.push(tool.summary.trim());
+  }
+  if (
+    tool.inclusionReason?.trim() &&
+    tool.inclusionReason.trim() !== tool.summary?.trim()
+  ) {
+    items.push(tool.inclusionReason.trim());
+  }
+  return items;
+}
+
 export function formatRelative(date: Date): string {
   const seconds = Math.round((date.getTime() - Date.now()) / 1000);
   const abs = Math.abs(seconds);

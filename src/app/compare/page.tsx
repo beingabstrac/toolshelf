@@ -13,6 +13,7 @@ import {
   CATEGORY_LABELS,
   SOURCE_LABELS,
   formatRelative,
+  getToolFeatures,
   hostnameFromUrl,
   withShelfRef,
 } from "@/lib/utils";
@@ -312,6 +313,23 @@ export default async function ComparePage({
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td><strong>Key Features</strong></td>
+                    <td>
+                      <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                        {getToolFeatures(left).map((feat, i) => (
+                          <li key={i}>{feat}</li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td>
+                      <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                        {getToolFeatures(right).map((feat, i) => (
+                          <li key={i}>{feat}</li>
+                        ))}
+                      </ul>
+                    </td>
+                  </tr>
                   <tr>
                     <td><strong>Categories</strong></td>
                     <td>

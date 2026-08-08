@@ -52,6 +52,7 @@ export const tools = pgTable(
     logoUrl: text("logo_url"),
     previewImageUrl: text("preview_image_url"),
     brandColor: text("brand_color"),
+    features: text("features").array().notNull().default([]),
     /** unknown | ok | broken — from soft HEAD/GET health checks */
     urlStatus: text("url_status").notNull().default("unknown"),
     urlCheckedAt: timestamp("url_checked_at", { withTimezone: true }),
