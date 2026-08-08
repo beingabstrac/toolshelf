@@ -40,11 +40,14 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
 
       - name: Resolve mode
         id: mode
@@ -79,24 +82,24 @@ jobs:
 
           case "$MODE" in
             poll)
-              npx tsx scripts/poll.ts
+              pnpm tsx scripts/poll.ts
               ;;
             drain)
-              npm run ingest:drain -- 40
+              pnpm run ingest:drain -- 40
               ;;
             poll-drain)
-              npx tsx scripts/poll.ts
-              npm run ingest:drain -- 30
+              pnpm tsx scripts/poll.ts
+              pnpm run ingest:drain -- 30
               ;;
             fill)
-              npm run ingest:fill
+              pnpm run ingest:fill
               ;;
             status)
-              npm run ingest:status
+              pnpm run ingest:status
               ;;
             show_hn|stories|producthunt|lobsters|uneed|devhunt)
-              npx tsx scripts/backfill.ts "$MODE" 120
-              npm run ingest:drain -- 20
+              pnpm tsx scripts/backfill.ts "$MODE" 120
+              pnpm run ingest:drain -- 20
               ;;
             *)
               echo "Unknown mode: $MODE"

@@ -30,11 +30,14 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
 
       - name: Resolve mode
         id: mode
@@ -62,16 +65,16 @@ jobs:
 
           case "$MODE" in
             reenrich)
-              npm run ingest:reenrich -- 40
-              npm run ingest:preview-health
+              pnpm run ingest:reenrich -- 40
+              pnpm run ingest:preview-health
               ;;
             check-urls)
-              npm run ingest:check-urls -- 40
+              pnpm run ingest:check-urls -- 40
               ;;
             both)
-              npm run ingest:reenrich -- 40
-              npm run ingest:check-urls -- 40
-              npm run ingest:preview-health
+              pnpm run ingest:reenrich -- 40
+              pnpm run ingest:check-urls -- 40
+              pnpm run ingest:preview-health
               ;;
             *)
               echo "Unknown mode: $MODE"
